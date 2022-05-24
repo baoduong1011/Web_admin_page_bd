@@ -5,15 +5,19 @@ import Icon from "../../components/LoginUI/Icon";
 import Input from "../../components/LoginUI/Input";
 import Button from "../../components/LoginUI/Button";
 import { useEffect, useState } from "react";
-import { getListUserService, getNewTokenService, userLoginService } from "../../services/serviceStore";
+import {
+  getListUserService,
+  getNewTokenService,
+  userLoginService,
+} from "../../services/serviceStore";
 import { useDispatch } from "react-redux";
-import swal from 'sweetalert';
-import swal2 from 'sweetalert2';
+import swal from "sweetalert";
+import swal2 from "sweetalert2";
 import { Home } from "@mui/icons-material";
+import Axios from "axios";
 
 
 const Login = () => {
-  
   const FacebookBackground =
     "linear-gradient(to right, #0546A0 0%, #0546A0 40%, #663FB6 100%)";
   const InstagramBackground =
@@ -32,6 +36,17 @@ const Login = () => {
     },
     valid: false,
   });
+
+  // var httpsAgent = require(httpsAgent);
+  // const Instance = Axios.create({
+  //   httpsAgent: https.Agent({
+  //     rejectUnauthorized: false
+  //   })
+  // })
+
+  useEffect(() => {
+    //  nbvm
+                                          }, []);
 
   let handleChange = (e) => {
     let { name, value } = e.target;
@@ -56,62 +71,64 @@ const Login = () => {
 
   let checkValid = () => {
     let valid = true;
-        for(let key in userLogin.errors) {
-            if(userLogin.errors[key] !== "" || userLogin.values[key] === '') {
-                valid = false;
-            }
-        }
-        setUserLogin({...userLogin,valid:valid});
-  }
+    for (let key in userLogin.errors) {
+      if (userLogin.errors[key] !== "" || userLogin.values[key] === "") {
+        valid = false;
+      }
+    }
+    setUserLogin({ ...userLogin, valid: valid });
+  };
 
   useEffect(() => {
     checkValid();
-  },[userLogin.errors]);
+  }, [userLogin.errors]);
 
   let SubmitInfo = () => {
-    userLoginService.Login(userLogin.values).then(res => {
-      getNewTokenService.GetToken().then(res2 => {
-        console.log(res2.data)
-      }).catch(err2 => {
-        console.log(err2.response.data)
+    userLoginService
+      .Login(userLogin.values)
+      .then((res) => {
+        getNewTokenService
+          .GetToken()
+          .then((res2) => {
+            console.log(res2.data);
+          })
+          .catch((err2) => {
+            console.log(err2.response.data);
+          });
+        // dispatch({
+        //   type:"PUSH_USERNAME",
+        //   email: userLogin.values.email,
+        // })
+        localStorage.setItem("email", userLogin.values.email);
+        localStorage.setItem("refreshToken", res.data.data.refreshToken);
+        localStorage.setItem("token", res.data.data.token);
+        document.cookie = res.data.data.token;
+        console.log(document.cookie);
+        swal2
+          .fire({
+            icon: "success",
+            title: "Login Successfully",
+            text: "Welcome to dashboard!",
+          })
+          .then(() => {
+            window.location.replace("/dashboard");
+          });
       })
-      // dispatch({
-      //   type:"PUSH_USERNAME",
-      //   email: userLogin.values.email,
-      // })
-      localStorage.setItem('email',userLogin.values.email);
-      localStorage.setItem('refreshToken',res.data.data.refreshToken);
-      localStorage.setItem('token',res.data.data.token)
-      document.cookie = res.data.data.token;
-      console.log(document.cookie)
-      swal2.fire({
-        icon: 'success',
-        title: 'Login Successfully',
-        text: 'Welcome to dashboard!',
-      }).then(() => {
-          window.location.replace('/dashboard');
-      })
-    
-      
-    })
-    .catch(err => {
-      console.log(err.response.data);
-      swal2.fire({
-        title: 'Something is wrong!',
-        text: 'We try to fix it! Sorry about that :(',
-        imageUrl: 'https://img.freepik.com/free-vector/error-404-with-cute-onigiri-mascot-cute-style-design-t-shirt-sticker-logo-element_152558-33632.jpg',
-        imageWidth: 400,
-        imageHeight: 400,
-        imageAlt: 'Custom image',
-      })
-      
-    })
-
-   
-  }
+      .catch((err) => {
+        console.log(err.response.data);
+        swal2.fire({
+          title: "Something is wrong!",
+          text: "We try to fix it! Sorry about that :(",
+          imageUrl:
+            "https://img.freepik.com/free-vector/error-404-with-cute-onigiri-mascot-cute-style-design-t-shirt-sticker-logo-element_152558-33632.jpg",
+          imageWidth: 400,
+          imageHeight: 400,
+          imageAlt: "Custom image",
+        });
+      });
+  };
 
   const dispatch = useDispatch();
-  
 
   return (
     <div className="main-login-page">
@@ -136,7 +153,13 @@ const Login = () => {
           />
         </InputContainer>
         <ButtonContainer>
-          {userLogin.valid ? <button onClick={SubmitInfo} >SIGN IN</button> :  <button  disabled style={{cursor:'not-allowed'}}>SIGN IN</button>}   
+          {userLogin.valid ? (
+            <button onClick={SubmitInfo}>SIGN IN</button>
+          ) : (
+            <button disabled style={{ cursor: "not-allowed" }}>
+              SIGN IN
+            </button>
+          )}
         </ButtonContainer>
         <LoginWith>JOIN WITH US</LoginWith>
         <HorizontalRule />

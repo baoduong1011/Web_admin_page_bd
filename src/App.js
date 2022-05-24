@@ -1,3 +1,5 @@
+
+// import https from "https";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import List from "./pages/list/List";
@@ -8,6 +10,7 @@ import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
 import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
+// import httpsBrowserify from "https-browserify";
 import {
   getRandomInt,
   getLocalToken,
@@ -18,13 +21,17 @@ import {
   getDataWithAuto,
 } from "./utils/Admin/Extensions";
 
+
+
+
+
 function App() {
   const [flagAdmin, setFlagADmin] = useState(false);
 
   const { darkMode } = useContext(DarkModeContext);
 
-  const urlAddRoom = "/products/new";
-  const urlAddUser = "/users/new";
+  const urlAddRoom = "/products/";
+  const urlAddUser = "/users/";
   const urlAddLocation = "";
 
   

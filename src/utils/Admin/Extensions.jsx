@@ -47,9 +47,9 @@ export function refreshToken() {
   );
 }
 
-export function getDataWithAuto() {
+export function getDataWithAuto(id) {
   return instance.get(
-    "https://cc62e73f33af4d5eb355d601efc35466-3afda50d-vm-80.vlab2.uit.edu.vn/api/v1/admin/users?page=1",
+    `https://cc62e73f33af4d5eb355d601efc35466-3afda50d-vm-80.vlab2.uit.edu.vn/api/v1/admin/users?page=${id}`,
     {
       headers: {
         Authorization: "Bearer " + getLocalToken(), // headers token
@@ -58,9 +58,9 @@ export function getDataWithAuto() {
   );
 }
 
-export function getDataWithAuto2() {
+export function getDataWithAuto2(id) {
   return instance.get(
-    "https://cc62e73f33af4d5eb355d601efc35466-3afda50d-vm-80.vlab2.uit.edu.vn/api/v1/user/rooms?page=1",
+    `https://cc62e73f33af4d5eb355d601efc35466-3afda50d-vm-80.vlab2.uit.edu.vn/api/v1/user/rooms?page=${id}`,
     {
       headers: {
         Authorization: "Bearer " + getLocalToken(), // headers token
@@ -68,4 +68,16 @@ export function getDataWithAuto2() {
     }
   );
 }
+
+
+export function InstanceLogin() {
+  return instance.post(
+    "https://cc62e73f33af4d5eb355d601efc35466-3afda50d-vm-80.vlab2.uit.edu.vn/api/v1/admin/auth/login",
+    {
+      email: "admin@gmail.com",
+      password: "admin123",
+    }
+  );
+}
+
 

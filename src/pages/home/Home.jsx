@@ -17,11 +17,7 @@ const Home = () => {
     //   window.location.reload();
     // },300000)
 
-    getNewTokenService.GetToken().then(res => {
-
-    }).catch(err => {
-      console.log(err.response.data)
-    })
+   
 
     let serRows = [
       {

@@ -177,4 +177,20 @@ export const userRows = [
     status: "active",
     age: 65,
   },
+  {
+    id: 11,
+    username: "Roxie",
+    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+    email: "snow@gmail.com",
+    status: "active",
+    age: 65,
+  },
+  {
+    id: 12,
+    username: "Roxie",
+    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+    email: "snow@gmail.com",
+    status: "active",
+    age: 65,
+  },
 ];
