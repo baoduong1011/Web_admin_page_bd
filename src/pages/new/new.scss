@@ -58,7 +58,24 @@
               border: none;
               border-bottom: 1px solid gray;
             }
+
+            .selectCustom {
+              
+              position: relative;
+              font-family: Arial;
+              select {
+                display: none; /*hide original SELECT element:*/
+                width: 300px;
+              }
+              .select-selected {
+                background-color: DodgerBlue;
+              }
+            }
+
+            
           }
+
+          
         }
         button {
           width: 150px;
@@ -74,4 +91,6 @@
       }
     }
   }
+
+
 }

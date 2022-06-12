@@ -1,19 +1,5 @@
 export const userColumns = [
-  { field: "id", headerName: "ID", width: 70 },
-  {
-    field: "user",
-    headerName: "User",
-    width: 230,
-    renderCell: (params) => {
-      // console.log(params.row.email)
-      return (
-        <div className="cellWithImg">
-          <img className="cellImg" src={params.row.profileImage} alt="avatar" />
-          {params.row.username}
-        </div>
-      );
-    },
-  },
+  // { field: "id", headerName: "ID", width: 70 },
   {
     field: "email",
     headerName: "Email",
@@ -40,23 +26,10 @@ export const userColumns = [
 ];
 
 export const roomColumns = [
-  { field: "id", headerName: "ID", width: 70 },
-  {
-    field: "room",
-    headerName: "Room",
-    width: 100,
-    renderCell: (params) => {
-      return (
-        <div className="cellWithImg">
-          <img className="cellImg" src={params.row.img} alt="avatar" />
-          {params.row.username}
-        </div>
-      );
-    },
-  },
+  // { field: "id", headerName: "ID", width: 70 },
   {
     field: "name",
-    headerName: "name",
+    headerName: "Name",
     width: 400,
   },
   {
@@ -72,7 +45,7 @@ export const roomColumns = [
   {
     field: "address",
     headerName: "Address",
-    width: 100,
+    width: 300,
   },
   {
     field: "approved",
@@ -92,6 +65,24 @@ export const roomColumns = [
         </button>
       );
     },
+  },
+]
+
+export const locationColumn = [
+  {
+    field: "displayName",
+    headerName: "Name",
+    width: 400,
+  },
+  {
+    field: "latitude",
+    headerName: "Latitude",
+    width: 200,
+  },
+  {
+    field: "longitude",
+    headerName: "Longitude",
+    width: 200,
   },
 ]
 

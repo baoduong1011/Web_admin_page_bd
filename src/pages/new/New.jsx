@@ -6,6 +6,11 @@ import { useEffect, useState } from "react";
 import { addNewUserService, getNewTokenService, putImageService, uploadImageService } from "../../services/serviceStore";
 import Axios from 'axios';
 import swal2 from 'sweetalert2';
+import { PutImage, uploadImage ,getDataWithAuto,
+  getDataWithAuto2,
+  getRandomInt,
+  instance,
+  refreshToken,  } from "../../utils/Admin/Extensions";
 
 
 
@@ -16,16 +21,47 @@ const New = ({ inputs, title }) => {
     linkImage:""
   });
 
-  function getLocalToken() {
-    const token = window.localStorage.getItem('token');
-    return token;
-  }
+  instance.setToken = (token) => {
+    instance.defaults.headers["Authorization"] = "Bearer " + token;
 
+    window.localStorage.setItem("token", token);
+  };
 
-  function getLocalRefreshToken() {
-    const token = window.localStorage.getItem('refreshToken')
-    return token
-}
+  instance.interceptors.response.use(
+    (response) => {
+      const { code, auto } = response.data;
+      return response;
+    },
+    (error) => {
+      console.warn("Error status", error.response.status);
+      const { status, auto } = error.response;
+      if (status === 400) {
+        refreshToken().then((rs) => {
+          let newToken = rs.data.data.token;
+          instance.setToken(newToken);
+          const config = error.response.config;
+          config.headers["Authorization"] = "Bearer " + newToken;
+          config.baseURL =
+            "https://cc62e73f33af4d5eb355d601efc35466-3afda50d-vm-80.vlab2.uit.edu.vn/api/v1";
+
+          return instance(config);
+        });
+      }
+      swal2
+        .fire({
+          title: `Please login again, you have expired!`,
+          text: "Click OK to try again!",
+          imageUrl:
+            "https://img.freepik.com/free-vector/error-404-with-cute-onigiri-mascot-cute-style-design-t-shirt-sticker-logo-element_152558-33632.jpg",
+          imageWidth: 400,
+          imageHeight: 400,
+          imageAlt: "Custom image",
+        })
+        .then(() => {
+          window.location.reload();
+        });
+    }
+  );
 
   useEffect(() => {
    
@@ -125,56 +161,28 @@ const New = ({ inputs, title }) => {
                   id="file"
                   onChange={(e) => {
                     setFile({...file,img:e.target.files[0],flag: !file.flag})
-                    uploadImageService.UploadImg().then(res => {
-                      
+                    uploadImage(24).then(res => {
                       var prevState = {...infoUser}
                       prevState.values.profileImage = res.data.data.getUrl;
+                      console.log(res.data.data.url);
+                      console.log(res.data.data.getUrl);
                       setInfoUser({prevState});
-                      // localStorage.setItem('image',res.data.data.getUrl);
-                      putImageService.PutImage(e.target.files[0],res.data.data.url,e.target.files[0].type).then(res => {
+                      
+                      // -------------------------------------
+
+                      putImageService.PutImage(e.target.files[0],res.data.data.url).then(res =>{
+                        console.log(res.data);  
                         swal2.fire({
                           position: 'top-center',
                           icon: 'success',
                           title: 'Upload image successfully',
                           showConfirmButton: false,
                           timer: 1500
+                          
                         })
                       }).catch(err => {
-                        swal2.fire({
-                          position: 'top-center',
-                          icon: 'success',
-                          title: 'Add user successfully!',
-                          showConfirmButton: false,
-                          timer: 1500
-                        }).then(() =>{
-                          window.location.reload();
-                        })
+                        console.log(err);
                       })
-                    }).catch(err => {
-                      
-                      getNewTokenService.GetToken().then(res2 => {
-                        
-                        localStorage.setItem('token',res2.data.data.token);
-                      }).catch(err2 => {
-                        swal2.fire({
-                          position: 'top-center',
-                          icon: 'success',
-                          title: 'Add user successfully!',
-                          showConfirmButton: false,
-                          timer: 1500
-                        })
-                      })
-                      swal2.fire({
-                        title: `You have exceeded the time we allow!`,
-                        text: 'Click OK to try again!',
-                        imageUrl: 'https://img.freepik.com/free-vector/error-404-with-cute-onigiri-mascot-cute-style-design-t-shirt-sticker-logo-element_152558-33632.jpg',
-                        imageWidth: 400,
-                        imageHeight: 400,
-                        imageAlt: 'Custom image',
-                      }).then(() => {
-                        window.location.reload();
-                      })
-                      
                     })
                     
                   }}

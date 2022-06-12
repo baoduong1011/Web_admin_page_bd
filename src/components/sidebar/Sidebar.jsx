@@ -22,6 +22,8 @@ const Sidebar = () => {
 
   const handleLogout = ()=> {
     localStorage.removeItem('email');
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     swal2.fire({
       icon: 'success',
       title: 'Logout Successfully',
@@ -62,12 +64,12 @@ const Sidebar = () => {
               <span>Rooms</span>
             </li>
           </Link>
-          <Link to="/locations" style={{ textDecoration: "none" }}>
-            <li>
-              <AddLocationAltIcon className="icon" />
-              <span>Locations</span>
-            </li>
-          </Link>
+          {localStorage.getItem('email') === "admin@gmail.com" ? <Link to="/locations" style={{ textDecoration: "none" }}>
+          <li>
+            <AddLocationAltIcon className="icon" />
+            <span>Locations</span>
+          </li>
+        </Link> : <div></div>}
           <p className="title">USEFUL</p>
           <li>
             <InsertChartIcon className="icon" />

@@ -4,14 +4,16 @@ import Navbar from "../../components/navbar/Navbar";
 import Datatable from "../../components/datatable/Datatable";
 import {
   getDataWithAuto,
+  getDataWithAuto2,
   getRandomInt,
   instance,
   refreshToken,
 } from "../../utils/Admin/Extensions";
 import swal2 from "sweetalert2";
 import { useEffect, useState } from "react";
+import Datatable2 from "../../components/datatable/Datatable2";
 
-const List = () => {
+const List = (props) => {
   instance.setToken = (token) => {
     instance.defaults.headers["Authorization"] = "Bearer " + token;
 
@@ -56,10 +58,18 @@ const List = () => {
 
   // ----------------------------------------------------------------------------------------------
 
-  const [data,setData] = useState({
-    userArray:[]
-  })
-  
+  const [data, setData] = useState({
+    userArray: [],
+    url: true,
+  });
+
+  useEffect(() => {
+    if (props.url === "/products/") {
+      setData({ ...data, url: true });
+    } else if (props.url === "/users/") {
+      setData({ ...data, url: false });
+    }
+  }, [props.url]);
 
   const getUsers = async function (pageNo = 1) {
     var apiResult = await getDataWithAuto(pageNo).then((res) => {
@@ -70,7 +80,7 @@ const List = () => {
   };
 
   const getRooms = async function (pageNo = 1) {
-    var apiResult = await getDataWithAuto(pageNo).then((res) => {
+    var apiResult = await getDataWithAuto2(pageNo).then((res) => {
       return res.data;
     });
 
@@ -80,7 +90,7 @@ const List = () => {
   const getEntireUserList = async function (pageNo = 1) {
     const results = await getUsers(pageNo);
     console.log("Retreiving data from API for page : " + pageNo);
-  
+
     if (results.data.length > 0) {
       return results.data.concat(await getEntireUserList(pageNo + 1));
     } else {
@@ -91,60 +101,22 @@ const List = () => {
   const getEntireRoomList = async function (pageNo = 1) {
     const results = await getRooms(pageNo);
     console.log("Retreiving data from API for page : " + pageNo);
-  
+
     if (results.data.length > 0) {
       return results.data.concat(await getEntireRoomList(pageNo + 1));
     } else {
       return results;
     }
   };
-
-  
-
-  
-
-
-  useEffect(() => {
-    (async () => {
-      const entireList = await getEntireUserList();
-      let array = entireList.slice(0,-1);
-      let array2 = ["active","passive"];
-      array.forEach((item,index) => {
-            let random = getRandomInt(0,2);
-            item.id=index+1;
-            item.status = array2[random];
-            item.age = getRandomInt(20,50);
-      })
-
-      setData({...data,userArray:array})
-    })();
-
-    (async () => {
-      const entireList = await getEntireRoomList();
-      let array = entireList.slice(0,-1);
-      let array2 = ["active","passive"];
-      array.forEach((item,index) => {
-            let random = getRandomInt(0,2);
-            item.id=index+1;
-            item.status = array2[random];
-            item.age = getRandomInt(20,50);
-      })
-
-      setData({...data,userArray:array})
-    })();
-  }, []);
-
-  console.log(data.userArray);
-
-  return (
-    <div className="list">
-      <Sidebar />
-      <div className="listContainer">
-        <Navbar />
-        <Datatable data={data.userArray} />
+    return (
+      <div className="list">
+        <Sidebar />
+        <div className="listContainer">
+          <Navbar />
+          {data.url ? <Datatable2 /> : <Datatable />}
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default List;

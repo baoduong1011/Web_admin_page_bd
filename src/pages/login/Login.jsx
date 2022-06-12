@@ -15,16 +15,68 @@ import swal from "sweetalert";
 import swal2 from "sweetalert2";
 import { Home } from "@mui/icons-material";
 import Axios from "axios";
+import { InstanceLogin, PutImage,
+  uploadImage,
+  getDataWithAuto,
+  getDataWithAuto2,
+  getRandomInt,
+  instance,
+  refreshToken,
+  CreateRoom,
+  CreateMedia, } from "../../utils/Admin/Extensions";
 
 
 const Login = () => {
+  instance.setToken = (token) => {
+    instance.defaults.headers["Authorization"] = "Bearer " + token;
+
+    window.localStorage.setItem("token", token);
+  };
+
+  instance.interceptors.response.use(
+    (response) => {
+      const { code, auto } = response.data;
+      return response;
+    },
+    (error) => {
+      console.warn("Error status", error.response.status);
+      const { status, auto } = error.response;
+      if (status === 400) {
+        refreshToken().then((rs) => {
+          let newToken = rs.data.data.token;
+          instance.setToken(newToken);
+          const config = error.response.config;
+          config.headers["Authorization"] = "Bearer " + newToken;
+          config.baseURL =
+            "https://cc62e73f33af4d5eb355d601efc35466-3afda50d-vm-80.vlab2.uit.edu.vn/api/v1";
+
+          return instance(config);
+        });
+      }
+      swal2
+        .fire({
+          title: `Please login again, you have expired!`,
+          text: "Click OK to try again!",
+          imageUrl:
+            "https://img.freepik.com/free-vector/error-404-with-cute-onigiri-mascot-cute-style-design-t-shirt-sticker-logo-element_152558-33632.jpg",
+          imageWidth: 400,
+          imageHeight: 400,
+          imageAlt: "Custom image",
+        })
+        .then(() => {
+          window.location.reload();
+        });
+    }
+  );
   const FacebookBackground =
     "linear-gradient(to right, #0546A0 0%, #0546A0 40%, #663FB6 100%)";
   const InstagramBackground =
     "linear-gradient(to right, #A12AC4 0%, #ED586C 40%, #F0A853 100%)";
   const TwitterBackground =
     "linear-gradient(to right, #56C1E1 0%, #35A9CE 50%)";
-
+    localStorage.removeItem('email');
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
   const [userLogin, setUserLogin] = useState({
     values: {
       email: "",
@@ -84,17 +136,8 @@ const Login = () => {
   }, [userLogin.errors]);
 
   let SubmitInfo = () => {
-    userLoginService
-      .Login(userLogin.values)
+    InstanceLogin(userLogin.values)
       .then((res) => {
-        getNewTokenService
-          .GetToken()
-          .then((res2) => {
-            console.log(res2.data);
-          })
-          .catch((err2) => {
-            console.log(err2.response.data);
-          });
         // dispatch({
         //   type:"PUSH_USERNAME",
         //   email: userLogin.values.email,
