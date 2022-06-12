@@ -125,7 +125,7 @@ const New = ({ inputs, title }) => {
       imageHeight: 400,
       imageAlt: 'Custom image',
     }).then(() => {
-      window.location.replace("/dashboard")
+      window.location.replace("/admin/dashboard")
     })
     return <div>
     

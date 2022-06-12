@@ -29,7 +29,7 @@ const Sidebar = () => {
       title: 'Logout Successfully',
       text: 'See you later!',
     }).then(() => {
-        window.location.replace('/');
+        window.location.replace('/admin');
     })
   }
 
@@ -44,7 +44,7 @@ const Sidebar = () => {
       <div className="center">
         <ul>
           <p className="title">MAIN</p>
-          <Link to="/dashboard" style={{ textDecoration: "none" }}>
+          <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
             <li>
               <DashboardIcon className="icon" />
               <span>Dashboard</span>

@@ -53,19 +53,20 @@ const Login = () => {
           return instance(config);
         });
       }
-      swal2
-        .fire({
-          title: `Please login again, you have expired!`,
-          text: "Click OK to try again!",
-          imageUrl:
-            "https://img.freepik.com/free-vector/error-404-with-cute-onigiri-mascot-cute-style-design-t-shirt-sticker-logo-element_152558-33632.jpg",
-          imageWidth: 400,
-          imageHeight: 400,
-          imageAlt: "Custom image",
-        })
-        .then(() => {
-          window.location.reload();
-        });
+      // swal2
+      //   .fire({
+      //     title: `Please login again, you have expired!`,
+      //     text: "Click OK to try again!",
+      //     imageUrl:
+      //       "https://img.freepik.com/free-vector/error-404-with-cute-onigiri-mascot-cute-style-design-t-shirt-sticker-logo-element_152558-33632.jpg",
+      //     imageWidth: 400,
+      //     imageHeight: 400,
+      //     imageAlt: "Custom image",
+      //   })
+      //   .then(() => {
+      //     window.location.reload();
+      //   });
+      window.location.reload();
     }
   );
   const FacebookBackground =
@@ -103,6 +104,8 @@ const Login = () => {
   let handleChange = (e) => {
     let { name, value } = e.target;
     let errorMessage = "";
+
+    let regexSQL_Injection = `  `
     if (value.trim() === "") {
       if (name === "email") {
         errorMessage = "Tài khoản bạn chưa nhập";
@@ -111,6 +114,8 @@ const Login = () => {
         errorMessage = "Mật khẩu bạn chưa nhập";
       }
     }
+
+    
 
     let newValues = { ...userLogin.values, [name]: value };
     let newErrors = { ...userLogin.errors, [name]: errorMessage };
@@ -146,7 +151,7 @@ const Login = () => {
         localStorage.setItem("refreshToken", res.data.data.refreshToken);
         localStorage.setItem("token", res.data.data.token);
         document.cookie = res.data.data.token;
-        console.log(document.cookie);
+        // console.log(document.cookie);
         swal2
           .fire({
             icon: "success",
@@ -154,7 +159,7 @@ const Login = () => {
             text: "Welcome to dashboard!",
           })
           .then(() => {
-            window.location.replace("/dashboard");
+            window.location.replace("/admin/dashboard");
           });
       })
       .catch((err) => {
@@ -167,7 +172,7 @@ const Login = () => {
           imageWidth: 400,
           imageHeight: 400,
           imageAlt: "Custom image",
-        });
+        })
       });
   };
 

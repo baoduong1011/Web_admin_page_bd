@@ -214,7 +214,7 @@ const New2 = ({ inputs, title }) => {
         imageAlt: "Custom image",
       })
       .then(() => {
-        window.location.replace("/dashboard");
+        window.location.replace("/admin/dashboard");
       });
     return <div></div>;
   } else

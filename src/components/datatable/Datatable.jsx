@@ -50,7 +50,7 @@ const Datatable = (props) => {
           imageAlt: "Custom image",
         })
         .then(() => {
-          window.location.replace("/dashboard");
+          window.location.replace("/admin/dashboard");
         });
     }
   );
