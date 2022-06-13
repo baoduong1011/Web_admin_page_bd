@@ -117,6 +117,8 @@ const New3 = ({ inputs, title }) => {
                       icon: "success",
                       title: "Create Location Successfully",
                       text: "Good Job!",
+                    }).then(() => {
+                      window.location.reload();
                     })
                   }).catch(err => {
                       console.log(err)

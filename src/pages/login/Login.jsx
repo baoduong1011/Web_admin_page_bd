@@ -104,16 +104,31 @@ const Login = () => {
   let handleChange = (e) => {
     let { name, value } = e.target;
     let errorMessage = "";
-
-    let regexSQL_Injection = `  `
+    let regrex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let regexPassword = /^([a-z]|[A-Z]|[0-9]){4,8}$/;
     if (value.trim() === "") {
       if (name === "email") {
-        errorMessage = "Tài khoản bạn chưa nhập";
+        errorMessage = "* Tài khoản bạn chưa nhập";
       }
       if (name === "password") {
-        errorMessage = "Mật khẩu bạn chưa nhập";
+        errorMessage = "* Mật khẩu bạn chưa nhập";
       }
     }
+    else {
+      if (name === "email") {
+        if (!regrex.test(value)) {
+          errorMessage="* Email không đúng định dạng";
+        }
+      }
+  
+      if(name === "password") {
+        if(!regexPassword.test(value)) {
+          errorMessage="* Password không chứa kí tự đặc biệt (4-8 kí tự)";
+        }
+      }
+    }
+
+    
 
     
 
@@ -178,6 +193,8 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
+
+
   return (
     <div className="main-login-page">
       <MainContainer>
@@ -191,6 +208,7 @@ const Login = () => {
             autocomplete="off"
             placeholder="Email"
           />
+          <p style={{'color':'red','fontWeight':'bolder','fontSize':'12px','letterSpacing':'0'}} >{userLogin.errors.email}</p>
           <input
             onChange={handleChange}
             type="password"
@@ -199,6 +217,7 @@ const Login = () => {
             required="required"
             autocomplete="off"
           />
+          <p style={{'color':'red','fontWeight':'bolder','fontSize':'12px','letterSpacing':'0'}} >{userLogin.errors.password}</p>
         </InputContainer>
         <ButtonContainer>
           {userLogin.valid ? (
